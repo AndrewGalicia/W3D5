@@ -1,4 +1,4 @@
-
+require "byebug"
 
 class PolyTreeNode
 
@@ -31,6 +31,28 @@ class PolyTreeNode
         child_node.parent = nil
     end
 
-    
+    def dfs(target_value)
+      return self if self.value == target_value
+
+      self.children.each do |child|
+        result = child.dfs(target_value)
+        return result unless result.nil?
+      end
+      nil
+    end
+
+    def bfs(target_value, &prc)
+      prc ||= Proc.new {|node| node.value == target_value}
+      queue = [self]
+
+      until queue.empty?
+        first_node = queue.shift
+        return first_node if prc.call(first_node)
+        queue.concat(first_node.children)  
+        
+      end
+      nil
+    end
+
 
 end
