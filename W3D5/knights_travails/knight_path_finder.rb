@@ -6,12 +6,9 @@ class KnightPathFinder
     [2,1], [2,-1], [-2,1], [-2,-1], [1,2], [1,-2], [-1,2], [-1,-2]
   ]
 
-
-
-  def self.root_node(pos)
-    row, col = pos
-    PolyTreeNode.new(pos)
-  end
+  # def self.root_node(pos)
+  #   PolyTreeNode.new(pos)
+  # end
 
   #from 0 to 7
   #moves are all possible directions like a slope on a graph
@@ -31,8 +28,9 @@ class KnightPathFinder
   end
 
   def initialize(pos)
-    initial_pos = KnightPathFinder.root_node(pos)
+    @initial_pos = pos
     @considered_positions = [initial_pos]
+    @root_node = PolyTreeNode.new(pos)
   end
 
   def considered_positions
@@ -40,11 +38,26 @@ class KnightPathFinder
   end
 
   def new_move_positions(pos)
-
     valid = KnightPathFinder.valid_moves(pos)
     new_positions = valid.select {|ele| !@considered_positions.include?(pos) }
     @considered_positions += new_positions
     new_positions
+  end
+
+  def build_move_tree
+    nodes = [@root_node] #[[0,0]]
+
+    until nodes.empty?
+      first_node = nodes.shift #[0,0]
+      new_positions = new_move_positions(first_node.value)
+
+      new_positions.each do |pos|
+        new_node = PolyTreeNode.new(pos)
+        first_node.add_child(new_node)
+        nodes << new_node #[[2,1], [1,2]]
+      end
+    end
+
   end
 
 end
