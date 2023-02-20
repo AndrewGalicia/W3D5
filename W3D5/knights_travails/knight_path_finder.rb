@@ -6,8 +6,7 @@ class KnightPathFinder
     [2,1], [2,-1], [-2,1], [-2,-1], [1,2], [1,-2], [-1,2], [-1,-2]
   ]
 
-  # [row+2, col+1], [row+2, col-1] [row-2, col+1], [row-2, col-1]
-  # [row+1, col-2] [row-1, col+2] [row-1, col-2], [row+1, col+2]
+
 
   def self.root_node(pos)
     row, col = pos
@@ -36,19 +35,25 @@ class KnightPathFinder
     @considered_positions = [initial_pos]
   end
 
+  def considered_positions
+    @considered_positions
+  end
+
   def new_move_positions(pos)
 
-    if !@considered_positions.include?(pos)
-
-      pos
-      @considered_positions << pos
-    end
+    valid = KnightPathFinder.valid_moves(pos)
+    new_positions = valid.select {|ele| !@considered_positions.include?(pos) }
+    @considered_positions += new_positions
+    new_positions
   end
 
 end
 
 if $PROGRAM_NAME == __FILE__
-  p KnightPathFinder.root_node([0,0])
-  p KnightPathFinder.valid_moves([0,0])
-  p KnightPathFinder.valid_moves([7,7])
+  # p KnightPathFinder.root_node([0,0])
+  # p KnightPathFinder.valid_moves([0,0])
+  # p KnightPathFinder.valid_moves([7,7])
+  test = KnightPathFinder.new([0,0])
+  p test.new_move_positions([7,7])
+  p test.considered_positions
 end
